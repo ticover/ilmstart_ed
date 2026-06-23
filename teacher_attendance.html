@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Перекличка | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Перекличка</h1><p>Отметьте посещаемость учеников по группе и дате</p></div></div>
+<section class="panel form-panel">
+    <form method="get" class="inline-form">
+        <label>Группа<select name="group_id" onchange="this.form.submit()">{% for g in groups %}<option value="{{ g.id }}" {{ 'selected' if selected_group_id == g.id else '' }}>{{ g.name }}</option>{% endfor %}</select></label>
+        <label>Дата<input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()"></label>
+        <button class="btn btn-soft" type="submit">Открыть</button>
+    </form>
+</section>
+<section class="panel">
+    <div class="panel-head"><h2>Список учеников</h2></div>
+    <form method="post">
+        <input type="hidden" name="group_id" value="{{ selected_group_id }}">
+        <input type="hidden" name="date" value="{{ selected_date }}">
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Ученик</th><th>Статус</th><th>Комментарий</th></tr></thead>
+                <tbody>
+                {% for s in students %}
+                    {% set saved = existing.get(s.id) %}
+                    <tr>
+                        <td>{{ s.full_name }}<br><code>{{ s.username }}</code></td>
+                        <td><select name="status_{{ s.id }}">{% for st in statuses %}<option {{ 'selected' if saved and saved.status == st else '' }}>{{ st }}</option>{% endfor %}</select></td>
+                        <td><input name="comment_{{ s.id }}" value="{{ saved.comment if saved else '' }}" placeholder="Комментарий"></td>
+                    </tr>
+                {% else %}<tr><td colspan="3">В группе нет учеников</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if students %}<button class="btn btn-primary" type="submit">Сохранить перекличку</button>{% endif %}
+    </form>
+</section>
+{% endblock %}

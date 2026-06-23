@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>{{ title }}</h1><p>Информация для учеников и учителей</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Добавить</h2></div>
+        <form method="post" action="{{ url_for(endpoint) }}" class="grid-form">
+            <label>Заголовок<input name="title" required placeholder="Введите заголовок"></label>
+            <label class="full-row">Текст<textarea name="body" required placeholder="Введите текст"></textarea></label>
+            <button class="btn btn-primary" type="submit">Опубликовать</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Опубликовано</h2></div>
+        <div class="cards-list">
+            {% for item in items %}
+                <article class="mini-card">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.body }}</p>
+                    <small>{{ item.created_at }}</small>
+                    <form method="post" action="{{ url_for(delete_endpoint, item_id=item.id) }}" onsubmit="return confirm('Удалить запись?')"><button class="btn btn-danger" type="submit">Удалить</button></form>
+                </article>
+            {% else %}<p class="muted">Записей пока нет</p>{% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

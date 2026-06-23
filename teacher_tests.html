@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Тесты | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Тесты</h1><p>Создание тестов для групп</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Создать тест</h2></div>
+        <form method="post" class="grid-form">
+            <label>Название<input name="title" required placeholder="Тест по теме"></label>
+            <label>Группа<select name="group_id" required>{% for g in groups %}<option value="{{ g.id }}">{{ g.name }}</option>{% endfor %}</select></label>
+            <label class="full-row">Описание<textarea name="description" placeholder="Краткое описание"></textarea></label>
+            <button class="btn btn-primary" type="submit">Создать тест</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Мои тесты</h2></div>
+        {% for t in tests %}
+            <article class="mini-card row"><div><h3>{{ t.title }}</h3><p>{{ t.group_name }} · {{ t.subject_name or '-' }} · вопросов: {{ t.questions_count }}</p><small>{{ t.created_at }}</small></div><a class="btn btn-soft" href="{{ url_for('teacher_test_questions', test_id=t.id) }}">Вопросы</a></article>
+        {% else %}<p class="muted">Тестов пока нет</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

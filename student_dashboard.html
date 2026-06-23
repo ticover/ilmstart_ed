@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div><h1>Панель ученика</h1><p>Ваше расписание, результаты, оплаты и уведомления</p></div>
+</div>
+<div class="dashboard-grid three">
+    <section class="panel">
+        <div class="panel-head"><h2>Оплата</h2><a href="{{ url_for('student_payments') }}">Все</a></div>
+        {% for p in payments %}<article class="mini-card row"><div><h3>{{ p.month }}</h3><p>{{ p.comment or 'Месячная оплата' }}</p></div><span class="status {{ 'ok' if p.status=='Оплачено' else 'bad' if p.status=='Не оплачено' else 'warn' }}">{{ p.status }}</span></article>
+        {% else %}<p class="muted">Записей пока нет</p>{% endfor %}
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Последние результаты</h2><a href="{{ url_for('student_results') }}">Все</a></div>
+        {% for r in results %}<article class="mini-card"><h3>{{ r.title }}</h3><p>{{ r.subject_name or '-' }} · {{ r.score }}/{{ r.max_score }}</p><small>{{ r.created_at }}</small></article>
+        {% else %}<p class="muted">Результатов пока нет</p>{% endfor %}
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Расписание</h2><a href="{{ url_for('student_schedule') }}">Все</a></div>
+        {% for sc in schedule %}<article class="mini-card"><h3>{{ sc.day_of_week }} {{ sc.start_time }}-{{ sc.end_time }}</h3><p>{{ sc.subject_name or '-' }} · {{ sc.teacher_name or '-' }}</p><small>Кабинет: {{ sc.room or '-' }}</small></article>
+        {% else %}<p class="muted">Расписание пока пустое</p>{% endfor %}
+    </section>
+</div>
+<div class="dashboard-grid two">
+    <section class="panel">
+        <div class="panel-head"><h2>Новости</h2></div>
+        {% for item in news %}<article class="mini-card"><h3>{{ item.title }}</h3><p>{{ item.body }}</p><small>{{ item.created_at }}</small></article>{% else %}<p class="muted">Новостей пока нет</p>{% endfor %}
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Объявления</h2></div>
+        {% for item in announcements %}<article class="mini-card"><h3>{{ item.title }}</h3><p>{{ item.body }}</p><small>{{ item.created_at }}</small></article>{% else %}<p class="muted">Объявлений пока нет</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

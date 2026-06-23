@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Мои результаты | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Мои результаты</h1><p>Оценки, баллы и комментарии учителей</p></div></div>
+<section class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Дата</th><th>Предмет</th><th>Группа</th><th>Работа</th><th>Балл</th><th>Учитель</th><th>Комментарий</th></tr></thead>
+            <tbody>{% for r in results %}<tr><td>{{ r.created_at }}</td><td>{{ r.subject_name or '-' }}</td><td>{{ r.group_name or '-' }}</td><td>{{ r.title }}</td><td><b>{{ r.score }}/{{ r.max_score }}</b></td><td>{{ r.teacher_name or '-' }}</td><td>{{ r.comment or '-' }}</td></tr>{% else %}<tr><td colspan="7">Результатов пока нет</td></tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

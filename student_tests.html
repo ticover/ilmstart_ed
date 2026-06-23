@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Тесты | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Тесты</h1><p>Доступные тесты для ваших групп</p></div></div>
+<div class="card-grid">
+    {% for t in tests %}
+        <article class="subject-card">
+            <h2>{{ t.title }}</h2>
+            <p>{{ t.description or 'Описание не добавлено' }}</p>
+            <div class="subject-meta"><span>Предмет: <b>{{ t.subject_name or '-' }}</b></span><span>Группа: <b>{{ t.group_name }}</b></span><span>Вопросов: <b>{{ t.questions_count }}</b></span><span>Последний результат: <b>{{ t.last_score or '-' }}</b></span></div>
+            {% if t.questions_count > 0 %}<a class="btn btn-primary" href="{{ url_for('take_test', test_id=t.id) }}">Начать тест</a>{% else %}<span class="muted">Учитель ещё не добавил вопросы</span>{% endif %}
+        </article>
+    {% else %}<section class="panel"><p class="muted">Доступных тестов пока нет</p></section>{% endfor %}
+</div>
+{% endblock %}

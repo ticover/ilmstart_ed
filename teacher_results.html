@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Результаты | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Результаты</h1><p>Учитель добавляет баллы и комментарии ученикам</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Добавить результат</h2></div>
+        <form method="post" class="grid-form">
+            <label>Группа<select name="group_id" required>{% for g in groups %}<option value="{{ g.id }}">{{ g.name }}</option>{% endfor %}</select></label>
+            <label>Ученик<select name="student_id" required>{% for s in students %}<option value="{{ s.id }}">{{ s.full_name }} / {{ s.group_name }}</option>{% endfor %}</select></label>
+            <label>Название работы<input name="title" required placeholder="Контрольная работа №1"></label>
+            <label>Балл<input type="number" step="0.1" name="score" required placeholder="85"></label>
+            <label>Макс. балл<input type="number" step="0.1" name="max_score" value="100"></label>
+            <label class="full-row">Комментарий<textarea name="comment" placeholder="Комментарий для ученика"></textarea></label>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Мои результаты</h2></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Дата</th><th>Ученик</th><th>Группа</th><th>Работа</th><th>Балл</th></tr></thead>
+                <tbody>
+                {% for r in results %}<tr><td>{{ r.created_at }}</td><td>{{ r.student_name }}</td><td>{{ r.group_name or '-' }}</td><td>{{ r.title }}</td><td><b>{{ r.score }}/{{ r.max_score }}</b></td></tr>
+                {% else %}<tr><td colspan="5">Результатов пока нет</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

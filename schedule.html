@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Расписание | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Расписание</h1><p>Дни, время, группы и кабинеты</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Добавить занятие</h2></div>
+        <form method="post" class="grid-form">
+            <label>Группа<select name="group_id" required>{% for g in groups %}<option value="{{ g.id }}">{{ g.name }}</option>{% endfor %}</select></label>
+            <label>День<select name="day_of_week" required>{% for d in days %}<option>{{ d }}</option>{% endfor %}</select></label>
+            <label>Начало<input type="time" name="start_time" required></label>
+            <label>Конец<input type="time" name="end_time" required></label>
+            <label>Кабинет<input name="room" placeholder="203"></label>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Список занятий</h2></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>День</th><th>Время</th><th>Группа</th><th>Предмет</th><th>Учитель</th><th></th></tr></thead>
+                <tbody>
+                {% for sc in schedule %}
+                    <tr><td>{{ sc.day_of_week }}</td><td>{{ sc.start_time }} - {{ sc.end_time }}</td><td>{{ sc.group_name }}</td><td>{{ sc.subject_name or '-' }}</td><td>{{ sc.teacher_name or '-' }}</td><td><form method="post" action="{{ url_for('delete_schedule', schedule_id=sc.id) }}"><button class="btn btn-danger" type="submit">Удалить</button></form></td></tr>
+                {% else %}<tr><td colspan="6">Расписание пока пустое</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

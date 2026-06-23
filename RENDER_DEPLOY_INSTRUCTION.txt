@@ -1,0 +1,27 @@
+ILMSTART EDU - готово для GitHub + Render
+
+ВАЖНО:
+Загружай на GitHub НЕ папку IlmStart_EDU целиком, а все файлы из этой папки прямо в корень репозитория.
+На GitHub в главном списке должны быть видны:
+- app.py
+- wsgi.py
+- requirements_server.txt
+- templates
+- static
+- database.db
+- render.yaml
+
+Настройки Render:
+Root Directory: оставить пустым
+Build Command: pip install -r requirements_server.txt
+Start Command: gunicorn wsgi:app
+Instance Type: Free
+Environment Variables: можно оставить пустым
+
+Если раньше уже был деплой:
+Manual Deploy -> Clear build cache & deploy
+
+Логины:
+Админ: admin / admin123
+Учитель: TCH1001 / 123456
+Ученик: STU1001 / 123456

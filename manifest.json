@@ -1,0 +1,21 @@
+{
+  "name": "IlmStart EDU",
+  "short_name": "IlmStart",
+  "start_url": "/login",
+  "display": "standalone",
+  "background_color": "#041022",
+  "theme_color": "#071733",
+  "description": "Learning Management System for IlmStart EDU education center",
+  "icons": [
+    {
+      "src": "/static/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

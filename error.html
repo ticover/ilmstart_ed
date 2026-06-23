@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Ошибка {{ code }} | IlmStart EDU{% endblock %}
+{% block content %}
+<section class="panel center-panel">
+    <h1>Ошибка {{ code }}</h1>
+    <p>{{ message }}</p>
+    <a class="btn btn-primary" href="{{ url_for('dashboard') }}">На главную</a>
+</section>
+{% endblock %}

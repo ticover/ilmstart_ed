@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Мои оплаты | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Месячные оплаты</h1><p>Статус вашей оплаты по месяцам</p></div></div>
+<div class="card-grid">
+    {% for p in payments %}
+        <article class="payment-card">
+            <div><h2>{{ p.month }}</h2><p>{{ p.comment or 'Месячная оплата' }}</p><small>Дата оплаты: {{ p.paid_at or '-' }}</small></div>
+            <div><strong>{{ '%.0f'|format(p.amount) }}</strong><br><span class="status {{ 'ok' if p.status=='Оплачено' else 'bad' if p.status=='Не оплачено' else 'warn' }}">{{ p.status }}</span></div>
+        </article>
+    {% else %}<section class="panel"><p class="muted">Записей по оплате пока нет</p></section>{% endfor %}
+</div>
+{% endblock %}

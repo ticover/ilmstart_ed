@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Мои предметы | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Мои предметы</h1><p>Группы и преподаватели, к которым вы прикреплены</p></div></div>
+<div class="card-grid">
+    {% for s in subjects %}
+        <article class="subject-card">
+            <h2>{{ s.subject_name or 'Без предмета' }}</h2>
+            <p>{{ s.description or 'Описание не добавлено' }}</p>
+            <div class="subject-meta"><span>Группа: <b>{{ s.group_name }}</b></span><span>Учитель: <b>{{ s.teacher_name or '-' }}</b></span><span>Кабинет: <b>{{ s.room or '-' }}</b></span><span>Оплата: <b>{{ '%.0f'|format(s.price) }}</b></span></div>
+        </article>
+    {% else %}<section class="panel"><p class="muted">Вы пока не добавлены ни в одну группу</p></section>{% endfor %}
+</div>
+{% endblock %}

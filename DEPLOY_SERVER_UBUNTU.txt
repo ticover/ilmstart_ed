@@ -1,0 +1,124 @@
+ILMSTART EDU - INTERNET DEPLOYMENT GUIDE UBUNTU VPS
+
+WHAT YOU NEED:
+1) VPS server with Ubuntu 22.04/24.04
+2) Server IP address
+3) SSH login: root or user with sudo
+4) Optional domain name
+
+IMPORTANT:
+- Your local address http://127.0.0.1:5000 works only on your computer.
+- For everyone to open the app from the internet, the project must run on a real server.
+- The database file database.db must stay on the server. Do not delete it.
+
+SERVER COMMANDS:
+
+1) Connect to server:
+ssh root@YOUR_SERVER_IP
+
+2) Install packages:
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip nginx unzip
+
+3) Create project folder:
+sudo mkdir -p /var/www/edu_center_lms
+sudo chown -R $USER:$USER /var/www/edu_center_lms
+
+4) Upload your project zip to /var/www/edu_center_lms and unzip it.
+If you upload edu_center_lms.zip:
+cd /var/www/edu_center_lms
+unzip edu_center_lms.zip
+
+If files are inside nested folder, move them to /var/www/edu_center_lms.
+
+5) Create virtual environment:
+cd /var/www/edu_center_lms
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements_server.txt
+
+6) Test run:
+gunicorn --bind 127.0.0.1:8000 wsgi:app
+
+Open another terminal and test:
+curl http://127.0.0.1:8000
+
+Stop gunicorn with CTRL+C.
+
+7) Create systemd service:
+sudo nano /etc/systemd/system/edu_center_lms.service
+
+Paste:
+[Unit]
+Description=IlmStart EDU Flask App
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/edu_center_lms
+Environment="SECRET_KEY=CHANGE_THIS_SECRET_KEY"
+ExecStart=/var/www/edu_center_lms/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8000 wsgi:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+Save: CTRL+O, Enter, CTRL+X
+
+8) Give permissions:
+sudo chown -R www-data:www-data /var/www/edu_center_lms
+sudo chmod -R 755 /var/www/edu_center_lms
+
+9) Start service:
+sudo systemctl daemon-reload
+sudo systemctl enable edu_center_lms
+sudo systemctl start edu_center_lms
+sudo systemctl status edu_center_lms
+
+10) Configure Nginx:
+sudo nano /etc/nginx/sites-available/edu_center_lms
+
+Paste:
+server {
+    listen 80;
+    server_name YOUR_SERVER_IP;
+
+    client_max_body_size 20M;
+
+    location /static/ {
+        alias /var/www/edu_center_lms/static/;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+If you have domain, replace YOUR_SERVER_IP with domain:
+server_name example.uz www.example.uz;
+
+Save.
+
+11) Enable site:
+sudo ln -s /etc/nginx/sites-available/edu_center_lms /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+
+12) Open firewall:
+sudo ufw allow OpenSSH
+sudo ufw allow 'Nginx Full'
+sudo ufw --force enable
+
+13) Open in browser:
+http://YOUR_SERVER_IP
+
+LOGIN:
+admin / admin123
+
+After deployment, immediately change admin password inside code/database logic in next version.

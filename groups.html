@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Группы | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Группы</h1><p>Создание групп и привязка учеников</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Создать группу</h2></div>
+        <form method="post" class="grid-form">
+            <input type="hidden" name="action" value="create_group">
+            <label>Название<input name="name" required placeholder="MATH-A1"></label>
+            <label>Предмет<select name="subject_id"><option value="">Выберите</option>{% for s in subjects %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></label>
+            <label>Учитель<select name="teacher_id"><option value="">Выберите</option>{% for t in teachers %}<option value="{{ t.id }}">{{ t.full_name }}</option>{% endfor %}</select></label>
+            <label>Стоимость<input type="number" name="price" placeholder="350000"></label>
+            <label>Кабинет<input name="room" placeholder="203"></label>
+            <button class="btn btn-primary" type="submit">Создать</button>
+        </form>
+    </section>
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Добавить ученика в группу</h2></div>
+        <form method="post" class="grid-form">
+            <input type="hidden" name="action" value="add_student">
+            <label>Группа<select name="group_id" required>{% for g in groups %}<option value="{{ g.id }}">{{ g.name }}</option>{% endfor %}</select></label>
+            <label>Ученик<select name="student_id" required>{% for s in students %}<option value="{{ s.id }}">{{ s.full_name }} / {{ s.username }}</option>{% endfor %}</select></label>
+            <button class="btn btn-primary" type="submit">Добавить</button>
+        </form>
+    </section>
+</div>
+<section class="panel">
+    <div class="panel-head"><h2>Все группы</h2></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Группа</th><th>Предмет</th><th>Учитель</th><th>Цена</th><th>Кабинет</th><th>Ученики</th></tr></thead>
+            <tbody>
+            {% for g in groups %}
+                <tr><td><b>{{ g.name }}</b></td><td>{{ g.subject_name or '-' }}</td><td>{{ g.teacher_name or '-' }}</td><td>{{ '%.0f'|format(g.price) }}</td><td>{{ g.room or '-' }}</td><td>{{ g.student_count }}</td></tr>
+                <tr class="subrow"><td colspan="6">
+                    {% for m in members if m.group_id == g.id %}
+                        <span class="student-pill">{{ m.full_name }} <form method="post" action="{{ url_for('delete_group_student', membership_id=m.id) }}"><button type="submit">×</button></form></span>
+                    {% else %}<span class="muted">В группе пока нет учеников</span>{% endfor %}
+                </td></tr>
+            {% else %}<tr><td colspan="6">Групп пока нет</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

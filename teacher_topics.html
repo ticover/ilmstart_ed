@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Пройденные темы | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Пройденные темы</h1><p>Фиксация темы урока и комментария</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Добавить тему</h2></div>
+        <form method="post" class="grid-form">
+            <label>Группа<select name="group_id" required>{% for g in groups %}<option value="{{ g.id }}">{{ g.name }}</option>{% endfor %}</select></label>
+            <label>Дата<input type="date" name="date" value="{{ today }}" required></label>
+            <label class="full-row">Тема<input name="title" required placeholder="Например: Производная функции"></label>
+            <label class="full-row">Комментарий<textarea name="comment" placeholder="Что проходили, домашнее задание"></textarea></label>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>История тем</h2></div>
+        {% for t in topics %}<article class="mini-card"><h3>{{ t.title }}</h3><p>{{ t.group_name }} · {{ t.subject_name or '-' }}</p><small>{{ t.date }}</small><p>{{ t.comment or '' }}</p></article>
+        {% else %}<p class="muted">Тем пока нет</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}{{ test.title }} | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>{{ test.title }}</h1><p>{{ test.subject_name or '-' }} · {{ test.group_name }}</p></div></div>
+<section class="panel">
+    <form method="post" class="test-form">
+        {% for q in questions %}
+            <article class="question-card">
+                <div class="q-title">{{ loop.index }}. {{ q.question }}</div>
+                <label class="option"><input type="radio" name="q_{{ q.id }}" value="A" required> A) {{ q.option_a }}</label>
+                <label class="option"><input type="radio" name="q_{{ q.id }}" value="B"> B) {{ q.option_b }}</label>
+                <label class="option"><input type="radio" name="q_{{ q.id }}" value="C"> C) {{ q.option_c }}</label>
+                <label class="option"><input type="radio" name="q_{{ q.id }}" value="D"> D) {{ q.option_d }}</label>
+            </article>
+        {% else %}<p class="muted">Вопросов пока нет</p>{% endfor %}
+        {% if questions %}<button class="btn btn-primary" type="submit">Завершить тест</button>{% endif %}
+    </form>
+</section>
+{% endblock %}

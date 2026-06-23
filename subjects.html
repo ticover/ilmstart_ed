@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Предметы | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Предметы</h1><p>Учебные направления центра</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Добавить предмет</h2></div>
+        <form method="post" class="grid-form">
+            <label>Название<input name="name" required placeholder="Например: Математика"></label>
+            <label class="full-row">Описание<textarea name="description" placeholder="Краткое описание"></textarea></label>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Список предметов</h2></div>
+        <div class="cards-list">
+            {% for s in subjects %}
+                <article class="mini-card row"><div><h3>{{ s.name }}</h3><p>{{ s.description or 'Описание не добавлено' }}</p></div><form method="post" action="{{ url_for('delete_subject', subject_id=s.id) }}"><button class="btn btn-danger" type="submit">Удалить</button></form></article>
+            {% else %}<p class="muted">Предметов пока нет</p>{% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#061733">
+    <title>Вход | IlmStart EDU</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon-192.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        *{box-sizing:border-box}
+        html,body{width:100%;min-height:100%;margin:0}
+        body.login-body{
+            min-height:100vh;
+            overflow:hidden;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#061733;
+            font-family:Inter,Segoe UI,Arial,sans-serif;
+        }
+        .login-page{
+            width:100vw;
+            height:100vh;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#061733;
+        }
+        .login-reference-stage{
+            position:relative;
+            width:min(100vw, calc(100vh * 1672 / 941));
+            height:min(100vh, calc(100vw * 941 / 1672));
+            aspect-ratio:1672/941;
+            background-image:url("{{ url_for('static', filename='images/ilmstart_login_reference.png') }}");
+            background-size:100% 100%;
+            background-repeat:no-repeat;
+            background-position:center;
+            overflow:hidden;
+            container-type:inline-size;
+            box-shadow:0 24px 80px rgba(0,0,0,.34);
+        }
+        .real-login-form{
+            position:absolute;
+            inset:0;
+            z-index:3;
+            pointer-events:none;
+        }
+        .real-login-form input,
+        .real-login-form button,
+        .real-login-form label,
+        .real-login-form a{pointer-events:auto}
+        .login-field{
+            position:absolute;
+            left:60.766%;
+            width:25.359%;
+            height:5.526%;
+        }
+        .login-field.username{top:49.947%}
+        .login-field.password{top:59.511%}
+        .login-field:has(input:not(:placeholder-shown))::before,
+        .login-field:has(input:focus)::before{
+            content:"";
+            position:absolute;
+            top:1px;
+            bottom:1px;
+            left:3.25cqw;
+            right:.95cqw;
+            border-radius:.45cqw;
+            background:linear-gradient(180deg,rgba(13,39,83,.98),rgba(9,31,68,.98));
+            z-index:0;
+        }
+        .login-field input{
+            position:absolute;
+            inset:0;
+            z-index:1;
+            width:100%;
+            height:100%;
+            border:0;
+            outline:0;
+            margin:0;
+            background:transparent;
+            color:#dce8ff;
+            caret-color:#ffffff;
+            padding:0 3.0cqw 0 3.18cqw;
+            font-size:.86cqw;
+            font-weight:500;
+            line-height:1;
+            letter-spacing:-.01em;
+            border-radius:.8cqw;
+            box-shadow:none;
+        }
+        .login-field.password input{padding-right:3.25cqw}
+        .login-field input::placeholder{color:transparent}
+        .login-field input:-webkit-autofill,
+        .login-field input:-webkit-autofill:hover,
+        .login-field input:-webkit-autofill:focus{
+            -webkit-text-fill-color:#dce8ff;
+            transition:background-color 9999s ease-in-out 0s;
+            caret-color:#ffffff;
+        }
+        .toggle-password{
+            position:absolute;
+            right:.2cqw;
+            top:0;
+            width:3.15cqw;
+            height:100%;
+            border:0;
+            background:transparent;
+            color:transparent;
+            cursor:pointer;
+            z-index:4;
+            padding:0;
+        }
+        .remember-real{
+            position:absolute;
+            left:60.766%;
+            top:66.631%;
+            width:1.196%;
+            height:2.125%;
+            opacity:0;
+            cursor:pointer;
+            z-index:5;
+        }
+        .remember-mark{
+            position:absolute;
+            left:60.766%;
+            top:66.631%;
+            width:1.196%;
+            height:2.125%;
+            border-radius:.22cqw;
+            z-index:4;
+            pointer-events:none;
+        }
+        .remember-real:checked + .remember-mark{
+            background:rgba(34,197,94,.35);
+            box-shadow:inset 0 0 0 .12cqw rgba(126,232,165,.95);
+        }
+        .remember-real:checked + .remember-mark::after{
+            content:"";
+            position:absolute;
+            width:.38cqw;
+            height:.68cqw;
+            left:.33cqw;
+            top:.09cqw;
+            border-right:.13cqw solid #ffffff;
+            border-bottom:.13cqw solid #ffffff;
+            transform:rotate(45deg);
+        }
+        .login-submit-real{
+            position:absolute;
+            left:60.766%;
+            top:70.776%;
+            width:25.359%;
+            height:5.313%;
+            border:0;
+            background:transparent;
+            color:transparent;
+            border-radius:.55cqw;
+            cursor:pointer;
+            z-index:5;
+            padding:0;
+        }
+        .login-submit-real:active{
+            background:rgba(255,255,255,.06);
+        }
+        .forgot-real{
+            position:absolute;
+            left:80.443%;
+            top:67.09%;
+            width:7.9%;
+            height:2.4%;
+            z-index:5;
+            color:transparent;
+            font-size:0;
+        }
+        .social-real{
+            position:absolute;
+            left:72.07%;
+            top:80.0%;
+            width:3.5%;
+            height:6.1%;
+            border-radius:50%;
+            z-index:5;
+            color:transparent;
+            font-size:0;
+        }
+        .login-alerts{
+            position:absolute;
+            left:60.766%;
+            top:44.2%;
+            width:25.359%;
+            z-index:10;
+            pointer-events:none;
+        }
+        .login-alerts .alert{
+            margin:0 0 .45cqw 0;
+            padding:.55cqw .7cqw;
+            border-radius:.75cqw;
+            font-size:.78cqw;
+            line-height:1.25;
+            background:rgba(239,68,68,.92);
+            border:1px solid rgba(255,200,200,.4);
+            color:#fff;
+            box-shadow:0 .7cqw 1.6cqw rgba(0,0,0,.25);
+        }
+        .login-alerts .alert-success{
+            background:rgba(34,197,94,.86);
+            border-color:rgba(185,255,210,.45);
+            color:#041022;
+            font-weight:800;
+        }
+        .login-alerts .alert-info{
+            background:rgba(35,120,255,.86);
+            border-color:rgba(187,215,255,.45);
+        }
+
+        .mobile-login-card{display:none}
+        @media(max-width: 860px){
+            body.login-body{
+                overflow:auto;
+                align-items:center;
+                min-height:100dvh;
+                background:
+                    radial-gradient(circle at 14% 8%, rgba(35,120,255,.28), transparent 34%),
+                    radial-gradient(circle at 90% 0%, rgba(34,197,94,.18), transparent 28%),
+                    linear-gradient(145deg,#041022,#071733 52%,#081f43);
+            }
+            .login-page{
+                min-width:100vw;
+                min-height:100dvh;
+                height:auto;
+                padding:22px 14px;
+                background:transparent;
+            }
+            .login-reference-stage{
+                width:min(100%, 430px);
+                height:auto;
+                aspect-ratio:auto;
+                min-height:auto;
+                background:
+                    linear-gradient(180deg,rgba(13,39,83,.92),rgba(6,22,48,.90)),
+                    radial-gradient(circle at 50% 0%,rgba(35,120,255,.22),transparent 55%);
+                border:1px solid rgba(148,190,255,.22);
+                border-radius:28px;
+                padding:24px;
+                overflow:visible;
+                box-shadow:0 24px 70px rgba(0,0,0,.36), inset 0 1px rgba(255,255,255,.08);
+            }
+            .login-reference-stage::before{
+                content:"";
+                position:absolute;
+                inset:-1px;
+                border-radius:28px;
+                pointer-events:none;
+                background:
+                    radial-gradient(circle at 20% 8%, rgba(35,120,255,.22), transparent 34%),
+                    radial-gradient(circle at 88% 10%, rgba(34,197,94,.16), transparent 30%);
+            }
+            .real-login-form{display:none}
+            .mobile-login-card{position:relative;z-index:5;display:block}
+            .mobile-login-logo{display:block;width:min(210px,72%);height:auto;margin:0 auto 16px;filter:drop-shadow(0 12px 25px rgba(0,0,0,.28))}
+            .mobile-login-card h1{font-size:30px;line-height:1.1;text-align:center;color:#fff;margin:0 0 8px;font-weight:900;letter-spacing:-.6px}
+            .mobile-login-card p{text-align:center;color:#AFC2E5;line-height:1.5;margin:0 0 22px;font-size:14px}
+            .mobile-alerts{margin-bottom:14px}
+            .mobile-alerts .alert{margin:0 0 8px;padding:12px 13px;border-radius:14px;font-size:14px;line-height:1.35;color:#fff;background:rgba(239,68,68,.16);border:1px solid rgba(239,68,68,.35)}
+            .mobile-alerts .alert-success{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.35);color:#8EF7AE}
+            .mobile-alerts .alert-info{background:rgba(35,120,255,.15);border-color:rgba(35,120,255,.35);color:#BBD7FF}
+            .mobile-login-card label{display:block;margin:14px 0 8px;color:#DCE8FF;font-weight:800;font-size:14px}
+            .mobile-login-card input[type="text"],
+            .mobile-login-card input[type="password"]{width:100%;height:54px;border:1px solid rgba(151,190,255,.30);background:rgba(4,16,34,.58);color:#fff;border-radius:15px;padding:0 15px;font-size:16px;outline:none;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+            .mobile-login-card input::placeholder{color:#7F92B8}
+            .mobile-login-card input:focus{border-color:rgba(34,197,94,.75);box-shadow:0 0 0 4px rgba(34,197,94,.11)}
+            .mobile-password-row{display:flex;gap:8px;align-items:center}
+            .mobile-password-row input{flex:1;min-width:0}
+            .mobile-eye{width:54px;height:54px;border:1px solid rgba(151,190,255,.28);background:rgba(255,255,255,.055);color:#DCE8FF;border-radius:15px;cursor:pointer;font-size:18px}
+            .mobile-options{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 18px;color:#BFD0ED;font-size:13px}
+            .mobile-check{display:flex!important;align-items:center;gap:9px;margin:0!important;font-weight:700!important;color:#BFD0ED!important}
+            .mobile-check input{width:18px;height:18px;accent-color:#22C55E}
+            .mobile-forgot{color:#8BBBFF;font-weight:800;white-space:nowrap}
+            .mobile-submit{width:100%;height:54px;border:0;border-radius:16px;background:linear-gradient(90deg,#2378FF,#22C55E);color:#fff;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 16px 30px rgba(34,197,94,.18)}
+            .mobile-demo{margin-top:18px;background:rgba(255,255,255,.052);border:1px solid rgba(148,190,255,.17);border-radius:18px;padding:14px;color:#BFD0ED;font-size:13px;line-height:1.7}
+            .mobile-demo b{color:#fff}
+        }
+        @media(max-width: 380px){
+            .login-page{padding:14px 10px}
+            .login-reference-stage{padding:20px 16px;border-radius:24px}
+            .mobile-login-card h1{font-size:27px}
+            .mobile-options{align-items:flex-start;flex-direction:column}
+        }
+
+        @media(min-width: 861px) and (max-aspect-ratio: 1672/941){
+            body.login-body{overflow:auto;align-items:flex-start}
+            .login-page{min-width:100vw;min-height:100vh;height:auto;padding:0;background:#061733}
+        }
+    </style>
+</head>
+<body class="login-body">
+<div class="login-page">
+    <main class="login-reference-stage" aria-label="IlmStart EDU login">
+        <form method="post" class="real-login-form" autocomplete="on">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="login-alerts">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <label class="login-field username" aria-label="Логин">
+                <input type="text" name="username" placeholder=" " required autofocus autocomplete="username">
+            </label>
+            <label class="login-field password" aria-label="Пароль">
+                <input id="passwordInput" type="password" name="password" placeholder=" " required autocomplete="current-password">
+                <button type="button" class="toggle-password" id="togglePassword" aria-label="Показать пароль">Показать пароль</button>
+            </label>
+            <input class="remember-real" id="rememberMe" type="checkbox" name="remember" value="1" aria-label="Запомнить меня">
+            <span class="remember-mark" aria-hidden="true"></span>
+            <a class="forgot-real" href="#" aria-label="Забыли пароль?">Забыли пароль?</a>
+            <button class="login-submit-real" type="submit" aria-label="Войти">Войти</button>
+            <a class="social-real" href="#" aria-label="Войти через учебный аккаунт">Войти через учебный аккаунт</a>
+        </form>
+
+        <form method="post" class="mobile-login-card" autocomplete="on">
+            <img class="mobile-login-logo" src="{{ url_for('static', filename='images/ilmstart_logo.png') }}" alt="IlmStart EDU">
+            <h1>Вход в систему</h1>
+            <p>Откройте кабинет администратора, учителя или ученика с телефона и ноутбука.</p>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mobile-alerts">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <label for="mobileUsername">Логин</label>
+            <input id="mobileUsername" type="text" name="username" required autocomplete="username" placeholder="Например: admin">
+            <label for="mobilePassword">Пароль</label>
+            <div class="mobile-password-row">
+                <input id="mobilePassword" type="password" name="password" required autocomplete="current-password" placeholder="Введите пароль">
+                <button class="mobile-eye" type="button" id="mobileTogglePassword" aria-label="Показать пароль">👁</button>
+            </div>
+            <div class="mobile-options">
+                <label class="mobile-check"><input type="checkbox" name="remember" value="1"> Запомнить</label>
+                <a class="mobile-forgot" href="#">Забыли пароль?</a>
+            </div>
+            <button class="mobile-submit" type="submit">Войти</button>
+            <div class="mobile-demo">
+                <b>Демо-доступ:</b><br>
+                admin / admin123<br>
+                TCH1001 / 123456<br>
+                STU1001 / 123456
+            </div>
+        </form>
+    </main>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

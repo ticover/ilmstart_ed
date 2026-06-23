@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Оплаты | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Месячные оплаты</h1><p>Админ отмечает оплату, долг или частичную оплату</p></div></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Отметить оплату</h2></div>
+        <form method="post" class="grid-form">
+            <label>Ученик<select name="student_id" required>{% for s in students %}<option value="{{ s.id }}">{{ s.full_name }} / {{ s.username }}</option>{% endfor %}</select></label>
+            <label>Месяц<input type="month" name="month" value="{{ current_month }}" required></label>
+            <label>Сумма<input type="number" name="amount" placeholder="350000" required></label>
+            <label>Статус<select name="status" required>{% for st in statuses %}<option>{{ st }}</option>{% endfor %}</select></label>
+            <label class="full-row">Комментарий<textarea name="comment" placeholder="Например: оплачено наличными"></textarea></label>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>История оплат</h2></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Ученик</th><th>Логин</th><th>Месяц</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead>
+                <tbody>
+                {% for p in payments %}
+                    <tr><td>{{ p.full_name }}</td><td><code>{{ p.username }}</code></td><td>{{ p.month }}</td><td>{{ '%.0f'|format(p.amount) }}</td><td><span class="status {{ 'ok' if p.status=='Оплачено' else 'bad' if p.status=='Не оплачено' else 'warn' }}">{{ p.status }}</span></td><td>{{ p.paid_at or '-' }}</td></tr>
+                {% else %}<tr><td colspan="6">Оплат пока нет</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

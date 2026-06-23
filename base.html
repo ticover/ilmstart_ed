@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#071733">
+    <title>{% block title %}IlmStart EDU{% endblock %}</title>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon-192.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <img class="brand-logo-img" src="{{ url_for('static', filename='images/ilmstart_logo.png') }}" alt="IlmStart EDU">
+            <div class="role-badge">
+                {% if current_user and current_user.role == 'admin' %}🛡️ Администратор{% elif current_user and current_user.role == 'teacher' %}👨‍🏫 Учитель{% elif current_user and current_user.role == 'student' %}🎓 Ученик{% else %}IlmStart EDU{% endif %}
+            </div>
+        </div>
+        <nav class="side-nav">
+            {% if current_user and current_user.role == 'admin' %}
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_dashboard' else '' }}" href="{{ url_for('admin_dashboard') }}">📊 <span>Dashboard</span></a>
+                <div class="nav-section">Управление центром</div>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_students' else '' }}" href="{{ url_for('admin_students') }}">🎓 <span>Ученики</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_teachers' else '' }}" href="{{ url_for('admin_teachers') }}">👨‍🏫 <span>Учителя</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_groups' else '' }}" href="{{ url_for('admin_groups') }}">👥 <span>Группы</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_subjects' else '' }}" href="{{ url_for('admin_subjects') }}">📚 <span>Предметы</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_schedule' else '' }}" href="{{ url_for('admin_schedule') }}">🗓️ <span>Расписание</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_results' else '' }}" href="{{ url_for('admin_results') }}">🏆 <span>Результаты</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_payments' else '' }}" href="{{ url_for('admin_payments') }}">💳 <span>Месячные оплаты</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_news' else '' }}" href="{{ url_for('admin_news') }}">📰 <span>Новости</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin_announcements' else '' }}" href="{{ url_for('admin_announcements') }}">📣 <span>Объявления</span></a>
+            {% elif current_user and current_user.role == 'teacher' %}
+                <a class="nav-link {{ 'active' if request.endpoint == 'teacher_dashboard' else '' }}" href="{{ url_for('teacher_dashboard') }}">📊 <span>Dashboard</span></a>
+                <div class="nav-section">Кабинет учителя</div>
+                <a class="nav-link {{ 'active' if request.endpoint == 'teacher_attendance' else '' }}" href="{{ url_for('teacher_attendance') }}">✅ <span>Перекличка</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'teacher_results' else '' }}" href="{{ url_for('teacher_results') }}">🏆 <span>Результаты</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'teacher_topics' else '' }}" href="{{ url_for('teacher_topics') }}">📌 <span>Пройденные темы</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'teacher_tests' else '' }}" href="{{ url_for('teacher_tests') }}">🧪 <span>Тесты</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'notifications' else '' }}" href="{{ url_for('notifications') }}">🔔 <span>Уведомления</span>{% if unread_count %}<b class="badge-mini">{{ unread_count }}</b>{% endif %}</a>
+            {% elif current_user and current_user.role == 'student' %}
+                <a class="nav-link {{ 'active' if request.endpoint == 'student_dashboard' else '' }}" href="{{ url_for('student_dashboard') }}">📊 <span>Dashboard</span></a>
+                <div class="nav-section">Кабинет ученика</div>
+                <a class="nav-link {{ 'active' if request.endpoint == 'student_subjects' else '' }}" href="{{ url_for('student_subjects') }}">📚 <span>Мои предметы</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'student_schedule' else '' }}" href="{{ url_for('student_schedule') }}">🗓️ <span>Расписание</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'student_results' else '' }}" href="{{ url_for('student_results') }}">🏆 <span>Результаты</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'student_tests' else '' }}" href="{{ url_for('student_tests') }}">🧪 <span>Тесты</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'student_payments' else '' }}" href="{{ url_for('student_payments') }}">💳 <span>Месячные оплаты</span></a>
+                <a class="nav-link {{ 'active' if request.endpoint == 'notifications' else '' }}" href="{{ url_for('notifications') }}">🔔 <span>Уведомления</span>{% if unread_count %}<b class="badge-mini">{{ unread_count }}</b>{% endif %}</a>
+            {% endif %}
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="version-card">🎓 <span>IlmStart EDU LMS</span><small>Версия 2.0</small></div>
+            <div class="copyline">© {{ current_year }} IlmStart EDU</div>
+        </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+    <main class="main-area">
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+            <div class="search-box">🔎 <input type="search" placeholder="Поиск по системе..." aria-label="Поиск"></div>
+            <div class="topbar-spacer"></div>
+            <a class="notif-link" href="{{ url_for('notifications') if current_user else '#' }}">🔔{% if unread_count %}<span>{{ unread_count }}</span>{% endif %}</a>
+            <div class="server-time">
+                <span>Время сервера</span>
+                <strong id="clock">--:--:--</strong>
+            </div>
+            <div class="user-chip">
+                <div class="avatar">{{ current_user.full_name[0] if current_user else 'U' }}</div>
+                <div class="user-meta">
+                    <strong>{{ current_user.full_name if current_user else '' }}</strong>
+                    <span>{{ current_user.role if current_user else '' }}</span>
+                </div>
+            </div>
+            <a class="logout" href="{{ url_for('logout') }}">Выйти</a>
+        </header>
+
+        <section class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </section>
+        <footer class="footer">IlmStart EDU LMS · Copyright © {{ current_year }}</footer>
+    </main>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

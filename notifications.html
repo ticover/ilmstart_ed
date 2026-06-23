@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Уведомления | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Уведомления</h1><p>Сообщения от системы</p></div></div>
+<section class="panel">
+    {% for n in notifications %}
+        <article class="mini-card row">
+            <div><h3>{{ n.title }}</h3><p>{{ n.body }}</p><small>{{ n.created_at }}</small></div>
+            <span class="status {{ 'warn' if not n.is_read else 'ok' }}">{{ 'Новое' if not n.is_read else 'Прочитано' }}</span>
+        </article>
+    {% else %}<p class="muted">Уведомлений пока нет</p>{% endfor %}
+</section>
+{% endblock %}

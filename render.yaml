@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: ilmstart-edu
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements_server.txt
+    startCommand: gunicorn wsgi:app

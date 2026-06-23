@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Вопросы теста | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>{{ test.title }}</h1><p>Добавление вопросов и правильных ответов</p></div><a class="btn btn-soft" href="{{ url_for('teacher_tests') }}">Назад</a></div>
+<div class="dashboard-grid two">
+    <section class="panel form-panel">
+        <div class="panel-head"><h2>Новый вопрос</h2></div>
+        <form method="post" class="grid-form">
+            <label class="full-row">Вопрос<textarea name="question" required placeholder="Введите вопрос"></textarea></label>
+            <label>A<input name="option_a" required placeholder="Вариант A"></label>
+            <label>B<input name="option_b" required placeholder="Вариант B"></label>
+            <label>C<input name="option_c" required placeholder="Вариант C"></label>
+            <label>D<input name="option_d" required placeholder="Вариант D"></label>
+            <label>Правильный ответ<select name="correct_option"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+            <button class="btn btn-primary" type="submit">Добавить вопрос</button>
+        </form>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Вопросы: {{ questions|length }}</h2></div>
+        {% for q in questions %}
+            <article class="question-card">
+                <div class="q-title">{{ loop.index }}. {{ q.question }}</div>
+                <ol type="A">
+                    <li class="{{ 'correct' if q.correct_option=='A' else '' }}">{{ q.option_a }}</li>
+                    <li class="{{ 'correct' if q.correct_option=='B' else '' }}">{{ q.option_b }}</li>
+                    <li class="{{ 'correct' if q.correct_option=='C' else '' }}">{{ q.option_c }}</li>
+                    <li class="{{ 'correct' if q.correct_option=='D' else '' }}">{{ q.option_d }}</li>
+                </ol>
+                <form method="post" action="{{ url_for('delete_question', question_id=q.id) }}"><button class="btn btn-danger" type="submit">Удалить</button></form>
+            </article>
+        {% else %}<p class="muted">Вопросов пока нет</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

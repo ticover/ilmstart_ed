@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Teacher Dashboard | IlmStart EDU{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div><h1>Панель учителя</h1><p>Группы, перекличка, результаты, темы и тесты</p></div>
+</div>
+<div class="stats-grid">
+    <div class="stat-card"><span>Мои группы</span><strong>{{ stats.groups }}</strong><small>назначенные группы</small></div>
+    <div class="stat-card"><span>Ученики</span><strong>{{ stats.students }}</strong><small>в моих группах</small></div>
+    <div class="stat-card"><span>Результаты</span><strong>{{ stats.results }}</strong><small>добавлено мной</small></div>
+    <div class="stat-card"><span>Тесты</span><strong>{{ stats.tests }}</strong><small>созданные тесты</small></div>
+</div>
+<div class="dashboard-grid two">
+    <section class="panel">
+        <div class="panel-head"><h2>Мои группы</h2><a href="{{ url_for('teacher_attendance') }}">Перекличка</a></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Группа</th><th>Предмет</th><th>Ученики</th><th>Кабинет</th></tr></thead>
+                <tbody>
+                {% for g in groups %}<tr><td>{{ g.name }}</td><td>{{ g.subject_name or '-' }}</td><td>{{ g.student_count }}</td><td>{{ g.room or '-' }}</td></tr>
+                {% else %}<tr><td colspan="4">Вам пока не назначили группы</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Новости центра</h2></div>
+        {% for item in news %}<article class="mini-card"><h3>{{ item.title }}</h3><p>{{ item.body[:120] }}{% if item.body|length > 120 %}...{% endif %}</p><small>{{ item.created_at }}</small></article>
+        {% else %}<p class="muted">Новостей пока нет</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}
